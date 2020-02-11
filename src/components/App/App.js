@@ -1,14 +1,8 @@
 import React from "react";
-import Preloader from "../Preloader/Preloader";
-import ErrorIndicator from "../ErrorIndicator/ErrorIndicator";
+import WithBookStoreService from "../hocs/WithBookStoreService";
 
 const App = () => {
-  return (
-    <div className="">
-      <Preloader />
-      <ErrorIndicator />
-    </div>
-  );
+  return <div>App</div>;
 };
 
 export default App;
