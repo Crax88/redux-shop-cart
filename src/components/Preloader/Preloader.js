@@ -4,8 +4,8 @@ import "./Preloader.css";
 const Preloader = () => {
   return (
     <div className="preloader-wrapper">
-      <div class="loadingio-spinner-reload-17bw870sg7b">
-        <div class="ldio-zcsu9d75i1">
+      <div className="loadingio-spinner-reload-17bw870sg7b">
+        <div className="ldio-zcsu9d75i1">
           <div>
             <div></div>
             <div></div>

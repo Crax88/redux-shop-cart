@@ -1,22 +1,39 @@
 import React, { Component } from "react";
 import BooksListItem from "../BooksListItem/BookListItem";
+import ErrorIndicator from "../ErrorIndicator/ErrorIndicator";
 import { connect } from "react-redux";
 import WithBookStoreService from "../hocs/WithBookStoreService";
-import { booksLoaded } from "../../store/actions/index";
+import {
+  booksLoaded,
+  booksRequested,
+  booksError
+} from "../../store/actions/index";
 import { compose } from "../../utils/index";
+import Preloader from "../Preloader/Preloader";
+
 class BooksList extends Component {
   componentDidMount() {
-    const { bookStoreService } = this.props;
-    const data = bookStoreService.getBooks();
-    this.props.booksLoaded(data);
+    const {
+      bookStoreService,
+      booksLoaded,
+      booksRequested,
+      booksError
+    } = this.props;
+    booksRequested();
+    bookStoreService
+      .getBooks()
+      .then(data => booksLoaded(data))
+      .catch(err => booksError(err));
   }
   render() {
-    const { books } = this.props;
+    const { books, isLoading, error } = this.props;
+    if (isLoading) return <Preloader />;
+    if (error) return <ErrorIndicator />;
     return (
-      <ul>
+      <ul className="list-group list-group-flush">
         {books.map(book => {
           return (
-            <li key={book.id}>
+            <li key={book.id} className="list-group-item">
               <BooksListItem book={book} />
             </li>
           );
@@ -26,12 +43,14 @@ class BooksList extends Component {
   }
 }
 
-const mapStateToProps = ({ books }) => {
-  return { books };
+const mapStateToProps = ({ books, isLoading, error }) => {
+  return { books, isLoading, error };
 };
 
 const mapDispatchToProps = {
-  booksLoaded
+  booksLoaded,
+  booksRequested,
+  booksError
 };
 // const mapDispatchToProps = dispatch => {
 //   return {
