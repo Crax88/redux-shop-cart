@@ -13,17 +13,18 @@ import Preloader from "../Preloader/Preloader";
 
 class BooksList extends Component {
   componentDidMount() {
-    const {
-      bookStoreService,
-      booksLoaded,
-      booksRequested,
-      booksError
-    } = this.props;
-    booksRequested();
-    bookStoreService
-      .getBooks()
-      .then(data => booksLoaded(data))
-      .catch(err => booksError(err));
+    this.props.fetchBooks();
+    // const {
+    //   bookStoreService,
+    //   booksLoaded,
+    //   booksRequested,
+    //   booksError
+    // } = this.props;
+    // booksRequested();
+    // bookStoreService
+    //   .getBooks()
+    //   .then(data => booksLoaded(data))
+    //   .catch(err => booksError(err));
   }
   render() {
     const { books, isLoading, error } = this.props;
@@ -47,16 +48,23 @@ const mapStateToProps = ({ books, isLoading, error }) => {
   return { books, isLoading, error };
 };
 
-const mapDispatchToProps = {
-  booksLoaded,
-  booksRequested,
-  booksError
-};
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     booksLoaded: booksList => dispatch(booksLoaded(booksList))
-//   };
+// const mapDispatchToProps = {
+//   booksLoaded,
+//   booksRequested,
+//   booksError
 // };
+const mapDispatchToProps = (dispatch, ownProps) => {
+  const { bookStoreService } = ownProps;
+  return {
+    fetchBooks: () => {
+      dispatch(booksRequested());
+      bookStoreService
+        .getBooks()
+        .then(data => dispatch(booksLoaded(data)))
+        .catch(err => dispatch(booksError(err)));
+    }
+  };
+};
 // const mapDispatchToProps = dispatch => {
 //   return bindActionCreators({ booksLoaded }, dispatch);
 // };
