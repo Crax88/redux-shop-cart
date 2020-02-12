@@ -3,17 +3,20 @@ import BooksListItem from "../BooksListItem/BookListItem";
 import ErrorIndicator from "../ErrorIndicator/ErrorIndicator";
 import { connect } from "react-redux";
 import WithBookStoreService from "../hocs/WithBookStoreService";
-import { fetchBooks } from "../../store/actions/index";
+import { fetchBooks, bookAddedToCart } from "../../store/actions/index";
 import { compose } from "../../utils/index";
 import Preloader from "../Preloader/Preloader";
 
-const BookList = ({ books }) => {
+const BookList = ({ books, onAddToCart }) => {
   return (
     <ul className="list-group list-group-flush">
       {books.map(book => {
         return (
           <li key={book.id} className="list-group-item">
-            <BooksListItem book={book} />
+            <BooksListItem
+              book={book}
+              onAddToCart={() => onAddToCart(book.id)}
+            />
           </li>
         );
       })}
@@ -26,10 +29,10 @@ class BooksListContainer extends Component {
     this.props.fetchBooks();
   }
   render() {
-    const { books, isLoading, error } = this.props;
+    const { books, isLoading, error, onAddToCart } = this.props;
     if (isLoading) return <Preloader />;
     if (error) return <ErrorIndicator />;
-    return <BookList books={books} />;
+    return <BookList books={books} onAddToCart={onAddToCart} />;
   }
 }
 
@@ -40,7 +43,8 @@ const mapStateToProps = ({ books, isLoading, error }) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { bookStoreService } = ownProps;
   return {
-    fetchBooks: fetchBooks(bookStoreService, dispatch)
+    fetchBooks: fetchBooks(bookStoreService, dispatch),
+    onAddToCart: id => dispatch(bookAddedToCart(id))
   };
 };
 
