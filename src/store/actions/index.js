@@ -45,7 +45,8 @@ export const bookRemovedFromCart = bookId => {
   };
 };
 
-export const fetchBooks = (bookStoreService, dispatch) => () => {
+export const fetchBooks = (bookStoreService, dispatch) => id => {
+  console.log(id);
   dispatch(booksRequested());
   bookStoreService
     .getBooks()

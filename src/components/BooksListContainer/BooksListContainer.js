@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import BooksListItem from "../BooksListItem/BookListItem";
 import ErrorIndicator from "../ErrorIndicator/ErrorIndicator";
-import { connect } from "react-redux";
+import Preloader from "../Preloader/Preloader";
 import WithBookStoreService from "../hocs/WithBookStoreService";
+import { connect } from "react-redux";
 import { fetchBooks, bookAddedToCart } from "../../store/actions/index";
 import { compose } from "../../utils/index";
-import Preloader from "../Preloader/Preloader";
 
 const BookList = ({ books, onAddToCart }) => {
   return (
@@ -26,7 +26,7 @@ const BookList = ({ books, onAddToCart }) => {
 
 class BooksListContainer extends Component {
   componentDidMount() {
-    this.props.fetchBooks();
+    this.props.fetchBooks(2);
   }
   render() {
     const { books, isLoading, error, onAddToCart } = this.props;
@@ -40,7 +40,7 @@ const mapStateToProps = ({ bookList: { books, isLoading, error } }) => {
   return { books, isLoading, error };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch, ownProps) => id => {
   const { bookStoreService } = ownProps;
   return {
     fetchBooks: fetchBooks(bookStoreService, dispatch),
